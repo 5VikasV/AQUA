@@ -48,3 +48,17 @@ class SessionService:
             return True
 
         return False
+
+    def rename(self, session_id: str, title: str):
+
+        if not title.strip():
+            return self.get(session_id)
+
+        session = self.get(session_id)
+
+        if session:
+            session.title = title
+            self.db.commit()
+            self.db.refresh(session)
+
+        return session

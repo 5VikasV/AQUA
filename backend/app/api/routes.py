@@ -5,7 +5,7 @@ from app.agent.agent import agent
 from app.database.database import get_db
 from app.memory.manager import MemoryManager
 from app.schemas.chat import ChatRequest, ChatResponse
-from app.schemas.session import SessionCreate, SessionResponse
+from app.schemas.session import SessionCreate, SessionRename, SessionResponse
 from app.services.session_service import SessionService
 from app.services.memory_service import MemoryService
 from app.schemas.chat import ChatMessage
@@ -92,6 +92,17 @@ def delete_session(
     return {
         "deleted": deleted
     }
+
+
+@router.patch("/sessions/{session_id}", response_model=SessionResponse)
+def rename_session(
+    session_id: str,
+    request: SessionRename,
+    db: Session = Depends(get_db),
+):
+    service = SessionService(db)
+
+    return service.rename(session_id, request.title)
 
 @router.get(
     "/sessions/{session_id}",

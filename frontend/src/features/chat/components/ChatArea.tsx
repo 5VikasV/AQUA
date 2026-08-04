@@ -3,8 +3,17 @@ import ChatInput from "./ChatInput";
 
 import { useChat } from "../hooks/useChat";
 
-export default function ChatArea() {
-  const { messages, loading, send } = useChat("chat1");
+interface Props {
+  sessionId: string | null;
+  currentTitle: string;
+  onRename: (id: string, title: string) => void;
+}
+
+export default function ChatArea({ sessionId, currentTitle, onRename }: Props) {
+  const { messages, loading, send } = useChat(sessionId ?? "", {
+    currentTitle,
+    onRename,
+  });
 
   return (
     <main className="flex flex-1 flex-col">
@@ -42,10 +51,12 @@ export default function ChatArea() {
 
       </div>
 
-      <ChatInput
-        loading={loading}
-        onSend={send}
-      />
+      {sessionId && (
+        <ChatInput
+          loading={loading}
+          onSend={send}
+        />
+      )}
 
     </main>
   );

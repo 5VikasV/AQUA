@@ -4,6 +4,7 @@ import type { Session } from "../api/sessions";
 import {
   getSessions,
   createSession,
+  renameSession as renameSessionApi,
 } from "../api/sessions";
 
 export function useSessions() {
@@ -22,6 +23,13 @@ export function useSessions() {
     await createSession(session);
 
     await load();
+
+    return session.id;
+  }
+
+  async function renameSession(id: string, title: string) {
+    await renameSessionApi(id, title);
+    await load();
   }
 
   useEffect(() => {
@@ -31,5 +39,6 @@ export function useSessions() {
   return {
     sessions,
     newSession,
+    renameSession,
   };
 }

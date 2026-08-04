@@ -1,7 +1,13 @@
-import { useSessions } from "../../chat/hooks/useSessions";
+import type { Session } from "../../chat/api/sessions";
 
-export default function Sidebar() {
-  const { sessions, newSession } = useSessions();
+interface Props {
+  sessions: Session[];
+  activeSessionId: string | null;
+  onSelectSession: (id: string) => void;
+  onNewSession: () => void;
+}
+
+export default function Sidebar({ sessions, activeSessionId, onSelectSession, onNewSession }: Props) {
 
   return (
     <aside className="w-72 bg-slate-900/70 backdrop-blur-xl border-r border-cyan-900 flex flex-col p-6">
@@ -11,7 +17,7 @@ export default function Sidebar() {
       </h1>
 
       <button
-        onClick={newSession}
+        onClick={onNewSession}
         className="mt-8 rounded-xl bg-cyan-500 py-3 font-semibold hover:bg-cyan-400"
       >
         + New Chat
@@ -23,7 +29,11 @@ export default function Sidebar() {
 
           <button
             key={session.id}
-            className="rounded-lg bg-slate-800 p-3 text-left hover:bg-slate-700"
+            onClick={() => onSelectSession(session.id)}
+            className={`rounded-lg p-3 text-left hover:bg-slate-700 transition-colors ${session.id === activeSessionId
+              ? "bg-cyan-900/60 text-cyan-300"
+              : "bg-slate-800"
+              }`}
           >
             {session.title}
           </button>

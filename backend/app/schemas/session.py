@@ -6,6 +6,10 @@ class SessionCreate(BaseModel):
     title: str
 
 
+class SessionRename(BaseModel):
+    title: str
+
+
 class SessionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

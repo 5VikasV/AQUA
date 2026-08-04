@@ -23,3 +23,8 @@ export async function getSessionMessages(sessionId: string) {
   const res = await api.get(`/sessions/${sessionId}`);
   return res.data;
 }
+
+export async function renameSession(id: string, title: string) {
+  const res = await api.patch<Session>(`/sessions/${id}`, { title });
+  return res.data;
+}
