@@ -5,6 +5,10 @@ from app.agent.agent import agent
 from app.database.database import get_db
 from app.memory.manager import MemoryManager
 from app.schemas.chat import ChatRequest, ChatResponse
+from app.schemas.session import SessionCreate, SessionResponse
+from app.services.session_service import SessionService
+from app.services.memory_service import MemoryService
+from app.schemas.chat import ChatMessage
 
 router = APIRouter()
 
@@ -56,3 +60,47 @@ def chat(request: ChatRequest, db: Session = Depends(get_db)):
 @router.get("/health")
 def health():
     return {"status": "healthy"}
+
+@router.get("/sessions", response_model=list[SessionResponse])
+def list_sessions(db: Session = Depends(get_db)):
+    service = SessionService(db)
+    return service.list()
+
+
+@router.post("/sessions", response_model=SessionResponse)
+def create_session(
+    request: SessionCreate,
+    db: Session = Depends(get_db),
+):
+    service = SessionService(db)
+
+    return service.create(
+        request.id,
+        request.title,
+    )
+
+
+@router.delete("/sessions/{session_id}")
+def delete_session(
+    session_id: str,
+    db: Session = Depends(get_db),
+):
+    service = SessionService(db)
+
+    deleted = service.delete(session_id)
+
+    return {
+        "deleted": deleted
+    }
+
+@router.get(
+    "/sessions/{session_id}",
+    response_model=list[ChatMessage],
+)
+def get_session_messages(
+    session_id: str,
+    db: Session = Depends(get_db),
+):
+    memory = MemoryService(db)
+
+    return memory.get_history(session_id)

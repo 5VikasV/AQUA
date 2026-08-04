@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "mock"
 
     OPENAI_API_KEY: str = ""
-    GEMINI_API_KEY: str = ""
+    GEMINI_API_KEY: str = "gemini-2.5-flash-lite"
     GROQ_API_KEY: str = ""
     OPENROUTER_API_KEY: str = ""
 

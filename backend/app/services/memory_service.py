@@ -5,22 +5,25 @@ from app.database.models import Conversation
 
 class MemoryService:
 
-    @staticmethod
-    def save_message(db: Session, session_id: str, role: str, message: str):
-        conversation = Conversation(
+    def __init__(self, db: Session):
+        self.db = db
+
+    def save(self, session_id: str, role: str, message: str):
+
+        chat = Conversation(
             session_id=session_id,
             role=role,
             message=message,
         )
 
-        db.add(conversation)
-        db.commit()
+        self.db.add(chat)
+        self.db.commit()
 
-    @staticmethod
-    def get_history(db: Session, session_id: str):
+    def get_history(self, session_id: str):
+
         return (
-            db.query(Conversation)
+            self.db.query(Conversation)
             .filter(Conversation.session_id == session_id)
-            .order_by(Conversation.created_at)
+            .order_by(Conversation.created_at.asc())
             .all()
         )

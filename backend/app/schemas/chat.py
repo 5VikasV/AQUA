@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ChatRequest(BaseModel):
@@ -10,3 +10,10 @@ class ChatResponse(BaseModel):
     assistant: str
     response: str
     status: str
+
+
+class ChatMessage(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    role: str
+    message: str
