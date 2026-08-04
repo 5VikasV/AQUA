@@ -5,6 +5,7 @@ import {
   getSessions,
   createSession,
   renameSession as renameSessionApi,
+  deleteSession as deleteSessionApi,
 } from "../api/sessions";
 
 export function useSessions() {
@@ -32,6 +33,11 @@ export function useSessions() {
     await load();
   }
 
+  async function deleteSession(id: string) {
+    await deleteSessionApi(id);
+    await load();
+  }
+
   useEffect(() => {
     load();
   }, []);
@@ -40,5 +46,6 @@ export function useSessions() {
     sessions,
     newSession,
     renameSession,
+    deleteSession,
   };
 }
